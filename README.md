@@ -6,4 +6,4 @@ LOCode, an abbreviation of Lines Of Code, parses GitHub repositories and returns
 In development.
 
 ### Versions
-The initial version will email the report to the email address of the requesting user. Subsequent versions will show the majority of real of results within the webapp at the time of query.
+The initial version will email the report to the email address of the requesting user. Subsequent versions will show the majority of results within the web app at the time of query.
