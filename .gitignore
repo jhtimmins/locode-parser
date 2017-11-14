@@ -108,3 +108,6 @@ venv.bak/
 
 #config
 *config.py
+
+#
+*.zip
