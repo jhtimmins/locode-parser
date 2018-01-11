@@ -1,7 +1,7 @@
+from .repo import validate
 import config
 import io
 import json
-import repo
 import requests
 import zipfile
 
@@ -37,7 +37,8 @@ class Parser:
         Launch the process of downloading zip file and parsing files for
         to count lines of code.
         """
-        clean_rel_path = repo.validate(relative_path)
+        clean_rel_path = validate(relative_path)
+        print(clean_rel_path)
         if not clean_rel_path:
             return False
         path = "https://api.github.com/repos/" + clean_rel_path
@@ -47,7 +48,7 @@ class Parser:
 
         self.count()
 
-        return self.counts
+        return self.format_results()
 
 
     def get_repo_data(self, url):
@@ -58,7 +59,7 @@ class Parser:
 
         return contents.json()
 
-    def get_zip_file(self, repo_data):
+    def get_zip_file(self):
         """
         Download zipfile from GitHub using clone_url in repo_data.
         """
@@ -104,3 +105,24 @@ class Parser:
             return parts[-2] + '.' + parts[-1]
         else:
             return None
+
+    def format_results(self):
+        """
+        Formats results as list of dictionaries with standard keys and sort.
+        """
+        counts = []
+        total = 0
+        for extension, count in self.counts.items():
+            total += count
+            if extension in self.file_types:
+                name = self.file_types[extension]
+            else:
+                name = 'unknown'
+            counts.append({
+                "count": count,
+                "extension": extension,
+                "name": name
+            })
+        sorted_counts = sorted(counts, key=lambda k: k["count"], reverse=True)
+
+        return {"total": total, "counts": sorted_counts}
